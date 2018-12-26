@@ -57,17 +57,17 @@ void plot::execComm(Document_Interface *doc, QWidget *parent, QString cmd)
 
         try{
             mu::Parser p;
-            p.DefineConst("pi",M_PI);
-            p.DefineConst("e",M_E);
-            p.DefineVar("x", &equationVariable);
-            p.DefineVar("t", &equationVariable);
-            p.SetExpr(startValue.toStdString());
+            p.DefineConst(_T("pi"),M_PI);
+            p.DefineConst(_T("e"),M_E);
+            p.DefineVar(_T("x"), &equationVariable);
+            p.DefineVar(_T("t"), &equationVariable);
+            p.SetExpr(startValue.toStdWString());
             startVal = p.Eval();
 
-            p.SetExpr(endValue.toStdString());
+            p.SetExpr(endValue.toStdWString());
             endVal = p.Eval();
 
-            p.SetExpr(equation1.toStdString());
+            p.SetExpr(equation1.toStdWString());
 
             for(equationVariable = startVal; equationVariable <= endVal; equationVariable += stepSize)
             {//calculate the values of the first equation
@@ -77,7 +77,7 @@ void plot::execComm(Document_Interface *doc, QWidget *parent, QString cmd)
 
             if(!equation2.isEmpty())
             {//calculate the values of the second equation
-                p.SetExpr(equation2.toStdString());
+                p.SetExpr(equation2.toStdWString());
                 for(int i = 0; i < xValues.size(); ++i)
                 {
                     equationVariable = xValues.at(i);
@@ -87,7 +87,9 @@ void plot::execComm(Document_Interface *doc, QWidget *parent, QString cmd)
         }
         catch (mu::Parser::exception_type &e)
         {
-            std::cout << e.GetMsg() << std::endl;
+            QString s;
+           s.fromStdWString(e.GetMsg());
+           std::cout<<s.toStdString()<<std::endl;
         }
 
         QList<double> const& xpoints=(equation2.isEmpty())?xValues:yValues1;
